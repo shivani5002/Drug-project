@@ -1,5 +1,6 @@
 import React from 'react';
 import { Award, Users, Target, Sparkles } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const stats = [
   { icon: Users, value: '10,000+', label: 'Medical Professionals' },
@@ -9,6 +10,9 @@ const stats = [
 ];
 
 const About = () => {
+
+  const navigate = useNavigate();
+
   return (
     <section id="about" className="py-20 bg-white">
       <div className="container mx-auto px-6">
@@ -28,7 +32,8 @@ const About = () => {
               accessible, accurate, and efficient through the power of generative AI and
               machine learning.
             </p>
-            <button className="bg-blue-600 text-white px-8 py-4 rounded-full hover:bg-blue-700 transition-colors">
+            <button onClick={() => navigate('/careers')}
+            className="bg-blue-600 text-white px-8 py-4 rounded-full hover:bg-blue-700 transition-colors">
               Join Our Team
             </button>
           </div>

@@ -260,9 +260,9 @@ const ProteinPredictor = () => {
       
       <div className="sidebar">
         <div className="sidebar-header">
-          <h1>🎈 ESMFold Predictor</h1>
+          <h1>🎈 ESMFold Visualization</h1>
           <p className="app-description">
-            Predict 3D protein structures from amino acid sequences.
+            Visualize 3D protein structures from amino acid sequences.
           </p>
         </div>
         
@@ -383,7 +383,7 @@ const ProteinPredictor = () => {
         {!pdbData ? (
           <div className="welcome-message">
             <h2>👈 Enter protein sequence data!</h2>
-            <p>Paste your protein sequence to predict its 3D structure.</p>
+            <p>Paste your protein sequence to visualize its 3D structure.</p>
             <div className="tips">
               <h3>Tips:</h3>
               <ul>
@@ -396,7 +396,7 @@ const ProteinPredictor = () => {
         ) : (
           <>
             <div className="visualization-header">
-              <h2>Predicted Protein Structure</h2>
+              <h2>Visualized Protein Structure</h2>
               <div className="visualization-controls">
                 <select 
                   value={visualizationStyle} 

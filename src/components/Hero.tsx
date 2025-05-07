@@ -1,7 +1,28 @@
-import React from 'react';
-import { ArrowRight } from 'lucide-react';
+import React, {useState} from 'react';
+import { ArrowRight, X} from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const Hero = () => {
+
+  const navigate = useNavigate();
+  const [isDemoOpen, setIsDemoOpen] = useState(false);
+
+  const scrollToTools = () => {
+    // If we're already on the home page, scroll to tools
+    if (window.location.pathname === '/') {
+      const toolsSection = document.getElementById('tools');
+      toolsSection?.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      // Otherwise navigate to home then scroll
+      navigate('/');
+      setTimeout(() => {
+        const toolsSection = document.getElementById('tools');
+        toolsSection?.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+    }
+  };
+
+
   return (
     <div className="relative min-h-screen flex items-center">
       {/* Background Pattern */}
@@ -28,16 +49,44 @@ const Hero = () => {
             and accelerated drug discovery.
           </p>
           <div className="flex flex-col sm:flex-row gap-4">
-            <button className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-8 py-4 rounded-full hover:shadow-lg transition-all duration-300 flex items-center justify-center group">
+            <button onClick={scrollToTools}
+            className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-8 py-4 rounded-full hover:shadow-lg transition-all duration-300 flex items-center justify-center group">
               Explore Our Tools
               <ArrowRight className="ml-2 h-5 w-5 transform group-hover:translate-x-1 transition-transform" />
             </button>
-            <button className="bg-white bg-opacity-50 backdrop-blur-sm border-2 border-blue-200 text-blue-700 px-8 py-4 rounded-full hover:shadow-lg hover:border-blue-300 transition-all duration-300">
+            <button onClick={() => setIsDemoOpen(true)}
+             className="bg-white bg-opacity-50 backdrop-blur-sm border-2 border-blue-200 text-blue-700 px-8 py-4 rounded-full hover:shadow-lg hover:border-blue-300 transition-all duration-300">
               Watch Demo
             </button>
           </div>
         </div>
       </div>
+
+      {/* Demo Video Modal */}
+      {isDemoOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center p-4">
+          <div className="relative w-full max-w-4xl bg-white rounded-xl overflow-hidden">
+            <button 
+              onClick={() => setIsDemoOpen(false)}
+              className="absolute top-4 right-4 z-10 p-2 rounded-full bg-white/20 backdrop-blur-sm hover:bg-white/30 transition-colors"
+            >
+              <X className="h-6 w-6 text-white" />
+            </button>
+            
+            <div className="aspect-w-16 aspect-h-9 w-full">
+              <iframe
+                className="w-full h-[500px]"
+                src="https://www.youtube.com/embed/Yf7OXkGJONQ?autoplay=1"
+                title="Product Demo"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              ></iframe>
+            </div>
+          </div>
+        </div>
+      )}
+
 
       {/* Decorative Image */}
       <div className="absolute right-12  top-2/4 -translate-y-1/2 hidden lg:block w-1/3 h-2/3">

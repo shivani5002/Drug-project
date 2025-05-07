@@ -4,7 +4,7 @@ import time
 from datetime import datetime
 import math
 
-protein_bp = Blueprint('protein', __name__)
+protein_bp = Blueprint('protein', __name__) 
 
 # Cache configuration
 PREDICTION_CACHE = {}
