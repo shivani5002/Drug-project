@@ -5,6 +5,7 @@ import jwt
 import datetime
 from functools import wraps
 import random
+from flask import Flask
 import string
 from twilio.rest import Client
 import os
@@ -12,10 +13,13 @@ from datetime import datetime, timedelta
 from bson.objectid import ObjectId
 import smtplib
 from email.mime.text import MIMEText
+from flask_cors import CORS
 from dotenv import load_dotenv
 load_dotenv()
 
 auth_bp = Blueprint('auth', __name__)
+app = Flask(__name__)
+CORS(app)
 
 # Configuration
 JWT_SECRET_KEY = os.getenv('JWT_SECRET', 'your-secret-key')
@@ -337,3 +341,7 @@ def protected_route(current_user):
         'message': f'Hello {current_user["name"]}! This is a protected route.',
         'user': current_user
     })
+
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 5002))  # Use 5002 locally, Render sets $PORT
+    app.run(host="0.0.0.0", port=port, debug=False)
