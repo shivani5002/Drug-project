@@ -8,7 +8,7 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "start": "vite preview",
+    "start": "vite preview --port 5173",
     "postbuild": "chmod -R 755 dist && ls -la dist"
   },
   "dependencies": {
