@@ -26,12 +26,11 @@
 
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import path from 'path';
 
 export default defineConfig({
   plugins: [ {name: 'log-build-info',
       config() {
-        console.log('Build output will go to:', path.resolve(__dirname, 'dist'))
+         console.log('Build output will go to: dist/')
       }
     },
     react({
@@ -39,15 +38,15 @@ export default defineConfig({
   })],
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src')
+      '@': './src'
     }
   },
   build: {
-    outDir: path.join(__dirname, 'dist'), // Absolute path     // Moved outside rollupOptions
+    outDir:  'dist',  // Absolute path     // Moved outside rollupOptions
     emptyOutDir: true,      // Moved outside rollupOptions
     chunkSizeWarningLimit: 2000, 
     rollupOptions: {
-      input: path.resolve(__dirname, './src/main.jsx'),
+      input: './src/main.jsx',
        output: {
         manualChunks: {
           vendor: ['react', 'react-dom'],
