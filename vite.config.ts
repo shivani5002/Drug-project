@@ -41,8 +41,10 @@ export default defineConfig({
       '@': './src'
     }
   },
+  base: '/',
   build: {
     outDir:  'dist',  // Absolute path     // Moved outside rollupOptions
+    assetsDir: '.',
     emptyOutDir: true,      // Moved outside rollupOptions
     chunkSizeWarningLimit: 2000, 
     rollupOptions: {
@@ -55,14 +57,6 @@ export default defineConfig({
         }
       }
     }
-  },
-  optimizeDeps: {
-    include: [
-      '@mui/material',
-      '@mui/icons-material',
-      'three',
-      '3dmol'
-    ]
   },
   server: {
     proxy: {
