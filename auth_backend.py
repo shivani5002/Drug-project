@@ -290,6 +290,10 @@ def verify_email():
 
 @auth_bp.route('/signin', methods=['POST'])
 def signin():
+        # Check if MongoDB is available
+    if not hasattr(current_app, 'mongo') or current_app.mongo.db is None:
+            current_app.logger.error("MongoDB connection not established")
+            return jsonify({'error': 'Database connection failed'}), 500
     data = request.get_json()
     
     if not data or not data.get('email') or not data.get('password'):
