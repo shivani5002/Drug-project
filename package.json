@@ -8,7 +8,8 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "start": "vite preview"
+    "start": "vite preview",
+    "postbuild": "chmod -R 755 dist && ls -la dist"
   },
   "dependencies": {
     "@emotion/react": "^11.11.1",
