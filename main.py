@@ -41,7 +41,7 @@ CORS(app, resources={
 })
 
 # Configuration
-app.config["MONGO_URI"] = os.getenv('MONGO_URI', 'mongodb://localhost:27017/genai_medical')
+app.config["MONGO_URI"] = os.getenv('MONGO_URI')
 mongo = PyMongo(app)
 app.mongo = mongo  # Make MongoDB client available to blueprints
 
