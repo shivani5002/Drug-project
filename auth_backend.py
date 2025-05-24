@@ -18,14 +18,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 auth_bp = Blueprint('auth', __name__)
-app = Flask(__name__)
-CORS(app, resources={
-    r"/api/auth/*": {
-        "origins": ["http://localhost:5173"],
-        "methods": ["GET", "POST", "OPTIONS", "PUT", "DELETE"],
-        "allow_headers": ["Content-Type", "Authorization"]
-    }
-})
+
 
 # Configuration
 JWT_SECRET_KEY = os.getenv('JWT_SECRET', 'your-secret-key')
@@ -348,20 +341,36 @@ def protected_route(current_user):
         'user': current_user
     })
 
-@auth_bp.route('/health', methods=['GET'])
-def health_check():
-    return jsonify({"status": "healthy", "service": "auth"})
+def create_standalone_app():
+    """Creates a Flask app for standalone mode"""
+    standalone_app = Flask(__name__)
+    
+    # Configure CORS for standalone mode
+    CORS(standalone_app, resources={
+        r"/api/auth/*": {
+            "origins": ["http://localhost:5173"],
+            "methods": ["GET", "POST", "OPTIONS", "PUT", "DELETE"],
+            "allow_headers": ["Content-Type", "Authorization"]
+        }
+    })
+    
+    # Configure MongoDB
+    standalone_app.config["MONGO_URI"] = MONGO_URI
+    mongo = PyMongo(standalone_app)
+    standalone_app.mongo = mongo
+    
+    # Register the blueprint
+    standalone_app.register_blueprint(auth_bp, url_prefix='/api/auth')
+    
+    # Add a health check endpoint
+    @standalone_app.route('/')
+    def health_check():
+        return jsonify({"status": "healthy", "service": "auth"})
+    
+    return standalone_app
 
 # Add this right after your CORS setup (before route definitions)
 if __name__ == "__main__":
-    # Initialize MongoDB
-    app.config["MONGO_URI"] = os.getenv('MONGO_URI')
-    mongo = PyMongo(app)
-    app.mongo = mongo
-    
-    # Register blueprint with prefix
-    app.register_blueprint(auth_bp, url_prefix='/api/auth')
-    
-    # Actually run the server
-    port = int(os.environ.get("PORT", 5000))  # Default to 5000 if $PORT not set
+    app = create_standalone_app()
+    port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port, debug=False)
