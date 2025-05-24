@@ -32,10 +32,17 @@ export default defineConfig({
     include: ['**/*.js', '**/*.jsx'] // This line is correct
   })],
   build: {
-    outDir: 'build',      // Moved outside rollupOptions
+    outDir: 'dist',      // Moved outside rollupOptions
     emptyOutDir: true,      // Moved outside rollupOptions
+    chunkSizeWarningLimit: 1500, 
     rollupOptions: {
-      input: '/src/main.jsx' // This is correct
+      input: '/src/main.jsx', // This is correct
+       output: {
+        manualChunks: {
+          threejs: ['three', '3dmol'],
+          react: ['react', 'react-dom']
+        }
+      }
     }
   },
   server: {
