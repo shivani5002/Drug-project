@@ -4,12 +4,12 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "prebuild": "rm -rf build",
+    "prebuild": "rm -rf dist",
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "clean-install": "rm -rf node_modules && rm -f package-lock.json && npm install",
+    "clean-install": "rm -rf node_modules package-lock.json && npm install",
     "start": "vite preview"
   },
   "dependencies": {
