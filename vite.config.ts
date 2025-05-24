@@ -29,7 +29,12 @@ import react from '@vitejs/plugin-react';
 import path from 'path';
 
 export default defineConfig({
-  plugins: [react({
+  plugins: [ {name: 'log-build-info',
+      config() {
+        console.log('Build output will go to:', path.resolve(__dirname, 'dist'))
+      }
+    },
+    react({
     include: ['**/*.js', '**/*.jsx'] // This line is correct
   })],
   resolve: {
@@ -38,9 +43,9 @@ export default defineConfig({
     }
   },
   build: {
-    outDir: 'dist',      // Moved outside rollupOptions
+    outDir: path.join(__dirname, 'dist'), // Absolute path     // Moved outside rollupOptions
     emptyOutDir: true,      // Moved outside rollupOptions
-    chunkSizeWarningLimit: 1600, 
+    chunkSizeWarningLimit: 2000, 
     rollupOptions: {
       input: path.resolve(__dirname, './src/main.jsx'),
        output: {
