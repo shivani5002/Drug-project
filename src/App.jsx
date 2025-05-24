@@ -38,7 +38,7 @@ import MolecularPropertyClassifier from './components/MolecularPropertyClassifie
 
 const App = () => {
   return (
-    <Router>
+    <Router basename="/">
       <AuthProvider>
         <Routes>
           {/* Public routes */}
