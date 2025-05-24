@@ -19,7 +19,13 @@ load_dotenv()
 
 auth_bp = Blueprint('auth', __name__)
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={
+    r"/api/auth/*": {
+        "origins": ["http://localhost:5173"],
+        "methods": ["GET", "POST", "OPTIONS", "PUT", "DELETE"],
+        "allow_headers": ["Content-Type", "Authorization"]
+    }
+})
 
 # Configuration
 JWT_SECRET_KEY = os.getenv('JWT_SECRET', 'your-secret-key')
@@ -342,6 +348,20 @@ def protected_route(current_user):
         'user': current_user
     })
 
+@auth_bp.route('/health', methods=['GET'])
+def health_check():
+    return jsonify({"status": "healthy", "service": "auth"})
+
+# Add this right after your CORS setup (before route definitions)
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5002))  # Use 5002 locally, Render sets $PORT
+    # Initialize MongoDB
+    app.config["MONGO_URI"] = os.getenv('MONGO_URI')
+    mongo = PyMongo(app)
+    app.mongo = mongo
+    
+    # Register blueprint with prefix
+    app.register_blueprint(auth_bp, url_prefix='/api/auth')
+    
+    # Actually run the server
+    port = int(os.environ.get("PORT", 5000))  # Default to 5000 if $PORT not set
     app.run(host="0.0.0.0", port=port, debug=False)
