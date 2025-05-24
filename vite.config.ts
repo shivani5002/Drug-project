@@ -26,24 +26,39 @@
 
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import path from 'path';
 
 export default defineConfig({
   plugins: [react({
     include: ['**/*.js', '**/*.jsx'] // This line is correct
   })],
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './src')
+    }
+  },
   build: {
     outDir: 'dist',      // Moved outside rollupOptions
     emptyOutDir: true,      // Moved outside rollupOptions
-    chunkSizeWarningLimit: 1500, 
+    chunkSizeWarningLimit: 1600, 
     rollupOptions: {
-      input: '/src/main.jsx', // This is correct
+      input: path.resolve(__dirname, './src/main.jsx'),
        output: {
         manualChunks: {
-          threejs: ['three', '3dmol'],
-          react: ['react', 'react-dom']
+          vendor: ['react', 'react-dom'],
+          mui: ['@mui/material', '@mui/icons-material'],
+          three: ['three', '3dmol']
         }
       }
     }
+  },
+  optimizeDeps: {
+    include: [
+      '@mui/material',
+      '@mui/icons-material',
+      'three',
+      '3dmol'
+    ]
   },
   server: {
     proxy: {
