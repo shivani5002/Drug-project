@@ -369,8 +369,9 @@ def create_standalone_app():
     
     return standalone_app
 
+app = create_standalone_app()
+
 # Add this right after your CORS setup (before route definitions)
 if __name__ == "__main__":
-    app = create_standalone_app()
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port, debug=False)
