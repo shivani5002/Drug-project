@@ -383,26 +383,21 @@ import os
 
 app = Flask(__name__)
 CORS(app, resources={
-    r"/*": {
-        "origins": [
-            "https://drug-app-frontend.onrender.com",
-            "http://localhost:4173",  # For local development
-            "http://localhost:5173"   # For local development
-        ],
-        "methods": ["GET", "POST", "OPTIONS"],
-        "allow_headers": ["Content-Type", "Authorization"],
-        "supports_credentials": True,
-        "max_age": 600
+    r"/predict": {
+        "origins": ["https://drug-app-frontend.onrender.com"],
+        "methods": ["POST", "OPTIONS"],
+        "allow_headers": ["Content-Type"]
+    },
+    r"/clear_cache": {
+        "origins": ["https://drug-app-frontend.onrender.com"],
+        "methods": ["POST", "OPTIONS"]
+    },
+    r"/health": {
+        "origins": ["https://drug-app-frontend.onrender.com"],
+        "methods": ["GET", "OPTIONS"]
     }
 })
 
-@app.after_request
-def after_request(response):
-    response.headers.add('Access-Control-Allow-Origin', 'https://drug-app-frontend.onrender.com')
-    response.headers.add('Access-Control-Allow-Credentials', 'true')
-    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
-    response.headers.add('Access-Control-Allow-Methods', 'GET,POST,OPTIONS')
-    return response
 
 # ====================================
 # Persistent Cache Setup
@@ -522,8 +517,10 @@ def morgan_to_image(x):
 # ====================================
 # API Endpoints
 # ====================================
-@app.route('/predict', methods=['POST'])
+@app.route('/predict', methods=['POST', 'OPTIONS'])
 def predict():
+    if request.method == 'OPTIONS':
+        return _build_cors_preflight_response()
     try:
         data = request.get_json()
         smiles = data.get('smiles', '')
@@ -567,15 +564,26 @@ def predict():
 
 @app.route('/clear_cache', methods=['POST'])
 def clear_cache():
+    if request.method == 'OPTIONS':
+        return _build_cors_preflight_response()
     global prediction_cache
     prediction_cache = {}
     if os.path.exists(CACHE_FILE):
         os.remove(CACHE_FILE)
     return jsonify({"message": "Cache cleared."})
 
-@app.route('/health', methods=['GET'])
+@app.route('/health', methods=['GET', 'OPTIONS'])
 def health_check():
+    if request.method == 'OPTIONS':
+        return _build_cors_preflight_response()
     return jsonify({"status": "healthy"})
+
+def _build_cors_preflight_response():
+    response = jsonify({"message": "Preflight accepted"})
+    response.headers.add("Access-Control-Allow-Origin", "https://drug-app-frontend.onrender.com")
+    response.headers.add("Access-Control-Allow-Headers", "Content-Type")
+    response.headers.add("Access-Control-Allow-Methods", "POST, OPTIONS")
+    return response
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5003, debug=True)
