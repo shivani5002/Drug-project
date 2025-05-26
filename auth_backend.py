@@ -348,9 +348,14 @@ def create_standalone_app():
     # Configure CORS for standalone mode
     CORS(standalone_app, resources={
         r"/api/auth/*": {
-            "origins": ["http://localhost:5173"],
+            "origins": [
+                    "http://localhost:4173",
+                    "http://localhost:5173",
+                    "https://drug-app-frontend.onrender.com/"
+                ],
             "methods": ["GET", "POST", "OPTIONS", "PUT", "DELETE"],
-            "allow_headers": ["Content-Type", "Authorization"]
+            "allow_headers": ["Content-Type", "Authorization"],
+             "supports_credentials": True
         }
     })
     
