@@ -64,7 +64,7 @@ const App = () => {
             <Route path="/careers" element={<Careers />} />
           </Route>
            {/* Redirect to signin by default */}
-           <Route path="*" element={<Navigate to="/signin" replace />} />
+           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </AuthProvider>
     </Router>
