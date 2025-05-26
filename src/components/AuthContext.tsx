@@ -28,7 +28,8 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
-const API_BASE_URL = import.meta.env.DEV ? 'http://localhost:5000/api/auth' : '/api/auth';
+//const API_BASE_URL = import.meta.env.DEV ? 'http://localhost:5000/api/auth' : '/api/auth';
+const API_BASE_URL = 'https://auth-service-ztol.onrender.com/api/auth';
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
