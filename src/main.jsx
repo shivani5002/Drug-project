@@ -1,13 +1,38 @@
-import { StrictMode } from 'react';
-import { createRoot } from 'react-dom/client';
-import App from './App'; // Ensure this path is correct
-import './index.css';
+// import { StrictMode } from 'react';
+// import { createRoot } from 'react-dom/client';
+// import App from './App'; // Ensure this path is correct
+// import './index.css';
+// import React from 'react'
 
-const root = createRoot(document.getElementById('root'));
+// const container = document.getElementById('root');
+// const root = createRoot(container);
+// root.render(
+//   // <StrictMode>
+//   //   <App />
+//   // </StrictMode>
+//    <React.StrictMode>
+//     <App />
+//   </React.StrictMode>
+// );
+
+import './setup-globals';
+import * as React from 'react';
+import * as ReactDOM from 'react-dom/client';
+// Your other imports...
+import App from './App';
+// src/main.jsx
+import './index.css' // Verify this path is correct
+
+// Debug mounting
+console.log('Mounting React...');
+const rootElement = document.getElementById('root');
+if (!rootElement) throw new Error('Root element not found');
+
+const root = ReactDOM.createRoot(rootElement);
 root.render(
-  <StrictMode>
+  <React.StrictMode>
     <App />
-  </StrictMode>
+  </React.StrictMode>
 );
 
 // import React from 'react';

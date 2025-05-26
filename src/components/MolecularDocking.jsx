@@ -11,7 +11,11 @@ import {
   Container
 } from '@mui/material';
 import axios from 'axios';
-import * as $3Dmol from '3dmol';
+// import * as $3Dmol from '3dmol';
+// import * as $3Dmol from '3dmol/build/3Dmol.js';
+
+const $3Dmol = window.$3Dmol;
+// Use normally as $3Dmol.createViewer() etc.
 
 const MolecularDockingViewer = () => {
   const navigate = useNavigate();

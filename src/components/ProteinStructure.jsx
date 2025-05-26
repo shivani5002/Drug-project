@@ -1,7 +1,11 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import axios from 'axios';
-import * as $3Dmol from '3dmol';
+// import * as $3Dmol from '3dmol';
+// import * as $3Dmol from '3dmol/build/3Dmol.js';
 import './ProteinPredictor.css';
+
+const $3Dmol = window.$3Dmol;
+// Use normally as $3Dmol.createViewer() etc.
  
 const ProteinPredictor = () => {
   const [sequence, setSequence] = useState('MGSSHHHHHHSSGLVPRGSHMRGPNPTAASLEASAGPFTVRSFTVSRPSGYGAGTVYYPTNAGGTVGAIAIVPGYTARQSSIKWWGPRLASHGFVVITIDTNSTLDQPSSRSSQQMAALRQVASLNGTSSSPIYGKVDTARMGVMGWSMGGGGSLISAANNPSLKAAAPQAPWDSSTNFSSVTVPTLIFACENDSIAPVNSSALPIYDSMSRNAKQFLEINGGSHSCANSGNSNQALIGKKGVAWMKRFMDNDTRYSTFACENPNSTRVSDFRTANCSLEDPAANKARKEAELAAATAEQ');
