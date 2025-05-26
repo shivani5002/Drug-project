@@ -382,7 +382,27 @@ from flask_cors import CORS
 import os
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={
+    r"/*": {
+        "origins": [
+            "https://drug-app-frontend.onrender.com",
+            "http://localhost:4173",  # For local development
+            "http://localhost:5173"   # For local development
+        ],
+        "methods": ["GET", "POST", "OPTIONS"],
+        "allow_headers": ["Content-Type", "Authorization"],
+        "supports_credentials": True,
+        "max_age": 600
+    }
+})
+
+@app.after_request
+def after_request(response):
+    response.headers.add('Access-Control-Allow-Origin', 'https://drug-app-frontend.onrender.com')
+    response.headers.add('Access-Control-Allow-Credentials', 'true')
+    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+    response.headers.add('Access-Control-Allow-Methods', 'GET,POST,OPTIONS')
+    return response
 
 # ====================================
 # Persistent Cache Setup
@@ -483,11 +503,15 @@ class ViT(nn.Module):
 # Load Model and Helper Functions
 # ====================================
 def load_model():
-    model_data = joblib.load("vit_model.pkl")
-    model = ViT(**model_data["model_config"])
-    model.load_state_dict(torch.load(model_data["model_state_dict"], map_location=torch.device('cpu')))
-    model.eval()
-    return model, model_data["label_encoder"]
+    try:
+        model_data = joblib.load("vit_model.pkl")
+        model = ViT(**model_data["model_config"])
+        model.load_state_dict(torch.load(model_data["model_state_dict"], map_location=torch.device('cpu')))
+        model.eval()
+        return model, model_data["label_encoder"]
+    except Exception as e:
+        print(f"MODEL LOADING ERROR: {str(e)}")
+        raise 
 
 vit, le = load_model()
 
@@ -554,4 +578,4 @@ def health_check():
     return jsonify({"status": "healthy"})
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8081, debug=True)
+    app.run(host='0.0.0.0', port=5003, debug=True)
