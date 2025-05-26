@@ -347,17 +347,26 @@ def create_standalone_app():
     
     # Configure CORS for standalone mode
     CORS(standalone_app, resources={
-        r"/api/auth/*": {
+        r"/api/*": {
             "origins": [
                     "http://localhost:4173",
                     "http://localhost:5173",
-                    "https://drug-app-frontend.onrender.com/"
+                    "https://drug-app-frontend.onrender.com"
                 ],
             "methods": ["GET", "POST", "OPTIONS", "PUT", "DELETE"],
             "allow_headers": ["Content-Type", "Authorization"],
              "supports_credentials": True
         }
     })
+
+    @standalone_app.after_request
+    def after_request(response):
+        # Required headers for all responses
+        response.headers.add('Access-Control-Allow-Origin', 'https://drug-app-frontend.onrender.com')
+        response.headers.add('Access-Control-Allow-Credentials', 'true')
+        response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+        response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
+        return response
     
     # Configure MongoDB
     standalone_app.config["MONGO_URI"] = MONGO_URI
