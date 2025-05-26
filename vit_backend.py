@@ -380,23 +380,25 @@ import torch.nn as nn
 import joblib
 from flask_cors import CORS
 import os
+from flask.helpers import make_response
 
 app = Flask(__name__)
 CORS(app, resources={
-    r"/predict": {
+    r"/*": {
         "origins": ["https://drug-app-frontend.onrender.com"],
-        "methods": ["POST", "OPTIONS"],
-        "allow_headers": ["Content-Type"]
-    },
-    r"/clear_cache": {
-        "origins": ["https://drug-app-frontend.onrender.com"],
-        "methods": ["POST", "OPTIONS"]
-    },
-    r"/health": {
-        "origins": ["https://drug-app-frontend.onrender.com"],
-        "methods": ["GET", "OPTIONS"]
+        "methods": ["GET", "POST", "OPTIONS"],
+        "allow_headers": ["Content-Type", "Authorization"],
+        "supports_credentials": True
     }
 })
+
+@app.after_request
+def after_request(response):
+    response.headers.add('Access-Control-Allow-Origin', 'https://drug-app-frontend.onrender.com')
+    response.headers.add('Access-Control-Allow-Credentials', 'true')
+    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+    response.headers.add('Access-Control-Allow-Methods', 'GET,POST,OPTIONS')
+    return response
 
 
 # ====================================
@@ -579,10 +581,11 @@ def health_check():
     return jsonify({"status": "healthy"})
 
 def _build_cors_preflight_response():
-    response = jsonify({"message": "Preflight accepted"})
+    response = make_response()
     response.headers.add("Access-Control-Allow-Origin", "https://drug-app-frontend.onrender.com")
-    response.headers.add("Access-Control-Allow-Headers", "Content-Type")
+    response.headers.add("Access-Control-Allow-Headers", "Content-Type, Authorization")
     response.headers.add("Access-Control-Allow-Methods", "POST, OPTIONS")
+    response.headers.add("Access-Control-Allow-Credentials", "true")
     return response
 
 if __name__ == '__main__':
